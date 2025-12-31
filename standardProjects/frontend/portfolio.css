@@ -11,6 +11,11 @@ body, html {
     background-size: cover;
     background: linear-gradient(135deg, rgb(35, 60, 60), darkslategrey);
     color: #f5f3ca;
+    overflow: scroll;
+}
+
+.loadingIcon, .contents, .welcomeText, .animatedBox {
+    will-change: transform, opacity, letter-spacing;
 }
 
 .contents {
@@ -302,4 +307,103 @@ body, html {
     box-shadow: 10px 5px rgba(0, 0, 0, 0.518);
     background:radial-gradient(circle at 20% 30%, darkslategrey, rgb(29, 49, 49));
     z-index: 0;
+}
+
+.animateABox {
+    animation: rotateBoxes 3s ease-out forwards;
+}
+
+@keyframes rotateBoxes {
+    to {
+        transform: rotate(315deg);
+    }
+}
+
+.moveWelcome {
+    animation: moveW 1s ease-out forwards;
+}
+
+@keyframes moveW {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    width: 20rem;
+    height: auto;
+    display: none;
+    opacity: 0;
+}
+
+.textBox {
+    padding: 0.5rem;
+    margin: 0;
+    border: 1px solid rgb(0, 0, 0, 0.2);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: justify;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    margin-bottom: 10rem;
+    background-color: rgb(0, 0, 0, 0.1);
+}
+
+.showMainContent {
+    animation: showContentMain 2s ease-out forwards;
+}
+
+@keyframes showContentMain {
+    from {
+        transform: translate(0, 50px);
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+.textBoxShow {
+    animation: showtexts 1s ease-out forwards alternate;
+}
+
+.textBoxHide {
+    animation: hidetexts 1s ease-out forwards alternate;
+}
+
+@keyframes hidetexts {
+    from {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+    to {
+        opacity: 0;
+        transform: translate(0, -50px);
+    }
+}
+
+@keyframes showtexts {
+    from {
+        opacity: 0;
+        transform: translate(0, 50px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
 }

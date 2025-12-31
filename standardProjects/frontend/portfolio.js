@@ -49,6 +49,37 @@ function animationHandler() {
                 welcomeText.textContent = `Welcome ${usernameInput.value}!`
                 loadingScreen.addEventListener('animationend', () => {
                     welcomeText.classList.add('welcomeShow');
+                    const mainContent = document.querySelector('.mainContent')
+                    
+
+                    document.querySelectorAll('.animatedBox').forEach((box) => {
+                        box.classList.add('animateABox');
+                    });
+                    setTimeout(() => {
+                        welcomeText.classList.add('moveWelcome')
+                        mainContent.style.display = 'flex';
+                        contents.style.display= 'none';
+                        const textBox = document.querySelectorAll('.textBox')
+                        
+                        welcomeText.addEventListener('animationend', () => {
+                            loadingScreen.style.display = 'none';
+                            welcomeText.style.display = 'none';
+                            mainContent.classList.add('showMainContent');
+
+                            const observer = new IntersectionObserver(entries => {
+                                entries.forEach((entry) => {
+                                    if (entry.isIntersecting) {
+                                        entry.target.classList.add('textBoxShow');
+                                        typeContent(entry.target);
+                                    } else {
+                                        entry.target.classList.remove('textBoxShow');
+                                    }
+                                });
+                            }, {threshold: 0.1});
+
+                            textBox.forEach(el => observer.observe(el))
+                        })
+                    }, 3000)
                 })
             }, 10)
         }, 3000)
@@ -62,4 +93,23 @@ function usernameErrorHandler(err) {
 }
 
 usernameInput.addEventListener('input', typedHandler);
+
+function typeContent(totype) {
+    let textsToType = totype.textContent;
+    let indexToType = 0;
+    console.log(totype.textContent)
+    totype.textContent = '';
+
+    const typing = setInterval(() => {
+        if (indexToType < textsToType.length) {
+            totype.textContent += textsToType[indexToType]
+            indexToType++
+        } else {
+            clearInterval(typing)
+            return;
+        }
+    }, 30)
+}
+
+//
 
