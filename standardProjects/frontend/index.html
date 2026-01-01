@@ -68,7 +68,76 @@
             </div>
         </div>
 
-        <div class="textBox typing">Calculator Project</div>
+        <div class="textBox">
+            <div class="calculator">
+                <div class="calcDisplay"></div>
+                <div class="calcRow">
+                    <div class="calcButtons" data-value="9" tabindex="0">9</div>
+                    <div class="calcButtons" data-value="8" tabindex="0">8</div>
+                    <div class="calcButtons" data-value="7" tabindex="0">7</div>
+                    <div class="calcButtons" data-value="+" tabindex="0">+</div>
+                </div>
+                <div class="calcRow">
+                    <div class="calcButtons" data-value="6" tabindex="0">6</div>
+                    <div class="calcButtons" data-value="5" tabindex="0">5</div>
+                    <div class="calcButtons" data-value="4" tabindex="0">4</div>
+                    <div class="calcButtons" data-value="-" tabindex="0">-</div>
+                </div>
+                <div class="calcRow">
+                    <div class="calcButtons" data-value="3" tabindex="0">3</div>
+                    <div class="calcButtons" data-value="2" tabindex="0">2</div>
+                    <div class="calcButtons" data-value="1" tabindex="0">1</div>
+                    <div class="calcButtons" data-value="/" tabindex="0">/</div>
+                </div>
+                <div class="calcRow">
+                    <div class="calcButtons" data-value="C" tabindex="0">C</div>
+                    <div class="calcButtons" data-value="0" tabindex="0">0</div>
+                    <div class="calcButtons" data-value="=" tabindex="0">=</div>
+                    <div class="calcButtons" data-value="*" tabindex="0">*</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="textBox">
+            <div class="guessTheNumber">
+                <p class="gtn">Guess the number!</p>
+                <p class="gtnRules">Select rules:
+                    <label for="gtnOptions" class="row">
+                        <input type="checkbox" class="gtnOptions" data-value="1000"> from 1-1000
+                    </label>
+                    <label for="gtnOptions" class="row">
+                        <input type="checkbox" class="gtnOptions" data-value="500"> from 1-500
+                    </label>
+                    <label for="gtnOptions" class="row">
+                        <input type="checkbox" class="gtnOptions" data-value="100"> from 1-100
+                    </label>
+                    <button class="gtnButton">Confirm</button>
+                </p>
+                <input type="text" class="gtnInput" placeholder="Place your guess here">
+            </div>
+        </div>
+
+        <div class="textBox">
+            <div class="Youtube Music">
+                <input type="text" id="musicSearch" placeholder="Search music...">
+                <button id="musicBtn">Search</button>
+
+                <div id="results"></div>
+
+                <div class="player">
+                <iframe
+                    id="ytPlayer"
+                    width="100%"
+                    height="315"
+                    src=""
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                </div>
+            </div>
+        </div>
+
         <div class="textBox typing">Game Project</div>
         <div class="textBox typing">Wordle Project</div>
         <div class="textBox typing">Clock Project</div>
