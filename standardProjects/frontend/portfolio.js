@@ -15,6 +15,12 @@ confirmButton.addEventListener('click', () => {
     animationHandler();
 });
 
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    if (!usernameInput.value || usernameInput.value.length > 15 || invalidSymbols.test(usernameInput.value)) return usernameErrorHandler('invalid username');
+    animationHandler();
+})
+
 function typedHandler() {
     confirmButton.classList.add('showButton');
     confirmButton.addEventListener('animationend', () => {
@@ -56,10 +62,13 @@ function animationHandler() {
                         box.classList.add('animateABox');
                     });
                     setTimeout(() => {
+                        const username = usernameInput.value[0].toUpperCase() + usernameInput.value.slice(1, (usernameInput.value.length + 1)).toLowerCase().trim()
+                        document.querySelector('.greet').textContent = `Welcome ${username}`
                         welcomeText.classList.add('moveWelcome')
                         mainContent.style.display = 'flex';
                         contents.style.display= 'none';
-                        const textBox = document.querySelectorAll('.textBox')
+                        const textBox = document.querySelectorAll('.textBox');
+                        const typingClass = document.querySelectorAll('.typing');
                         
                         welcomeText.addEventListener('animationend', () => {
                             loadingScreen.style.display = 'none';
@@ -70,7 +79,6 @@ function animationHandler() {
                                 entries.forEach((entry) => {
                                     if (entry.isIntersecting) {
                                         entry.target.classList.add('textBoxShow');
-                                        typeContent(entry.target);
                                     } else {
                                         entry.target.classList.remove('textBoxShow');
                                     }
@@ -97,7 +105,6 @@ usernameInput.addEventListener('input', typedHandler);
 function typeContent(totype) {
     let textsToType = totype.textContent;
     let indexToType = 0;
-    console.log(totype.textContent)
     totype.textContent = '';
 
     const typing = setInterval(() => {
@@ -109,7 +116,73 @@ function typeContent(totype) {
             return;
         }
     }, 30)
+
 }
 
+const typeObserver = new IntersectionObserver(entries => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            typeContent(entry.target);
+        }
+    })
+})
+
+const typingClass = document.querySelectorAll('.typing')
+typingClass.forEach(el => typeObserver.observe(el));
+
+
 //
+//
+//
+
+
+const aiInterface = document.querySelector('.aiInterface')
+const botResponse = document.querySelector('.botResponse')
+const aiButton = document.querySelector('.aiButton')
+
+aiButton.addEventListener('click', () => {
+    if (!aiInterface.value) return;
+    promptHandler(aiInterface.value)
+})
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    if (!aiInterface.value) return;
+    promptHandler(aiInterface.value);
+})
+
+async function promptHandler(prompt) {
+    let search = prompt.trim()
+    let reply = botResponse.textContent;
+    botResponse.textContent = '';
+
+    try {
+        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(search)}`
+        )
+        if (!res.ok) {
+            reply = `i could not find what you're looking for: ${search}`
+             botResponse.textContent = `Error 404 / search without using 'what is' || 'what'. Instead, search 'JavaScript' || 'HTML' and so on.`;
+            return;
+        }
+        const data = await res.json();
+        reply = data.extract || `No summary available for ${[search]}`
+        
+        let toType = reply;
+        let typeIndex = 0;
+        botResponse.textContent = ''
+
+        const loop = setInterval(() => {
+            if (typeIndex < toType.length) {
+                botResponse.textContent += toType[typeIndex];
+                typeIndex++
+            } else {
+                clearInterval(loop);
+            }
+        }, 10)
+
+        return;
+    } catch {
+        botResponse.textContent = `Error 404 / search without using 'what is' || 'what'. Instead, search 'JavaScript' || 'HTML' and so on.`;
+    }
+
+}
 
