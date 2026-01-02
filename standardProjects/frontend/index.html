@@ -27,6 +27,15 @@
             <span class="menuIcon">
             <img src="./iconsWhite/menu_open_24dp_F5F3CA_FILL0_wght400_GRAD0_opsz24.svg" alt="">
             </span>
+            <span class="menuOptions">
+                <a href="#aboutMe" class="menuOptionText">About Me</a>
+                <a href="#AI" class="menuOptionText">Artificial Intelligence</a>
+                <a href="#calculator" class="menuOptionText">Calculator</a>
+                <a href="#guessTheNumber" class="menuOptionText">Guess The Number</a>
+                <a href="#YTM" class="menuOptionText">Youtube Music</a>
+                <a href="#expenseTracker" class="menuOptionText">Expense Tracker</a>
+                <a href="#weather" class="menuOptionText">Daily Weather</a>
+            </span>
         </span>
     </div>
     
@@ -57,9 +66,9 @@
 
         <div class="whiteLine"></div>
 
-        <div class="textBox typing">Hi, my name is Christian and I'm a Computer Science student from Negros Oriental State University. <br> I'm currently 19 years old and i'm trying to master Web Development, especially JavaScript which is mostly used for this website you're on.</div>
+        <div class="textBox typing" id="aboutMe">Hi, my name is Christian and I'm a Computer Science student from Negros Oriental State University. <br> I'm currently 19 years old and i'm trying to master Web Development, especially JavaScript which is mostly used for this website you're on.</div>
 
-        <div class="textBox">
+        <div class="textBox" id="AI">
             <div class="text">This is an ai that i made from scratch, a few responses came from an API. Source: Wikipedia</div>
             <div class="botResponse"></div>
             <div class="robot">
@@ -68,7 +77,7 @@
             </div>
         </div>
 
-        <div class="textBox">
+        <div class="textBox" id="calculator">
             <div class="calculator">
                 <div class="calcDisplay"></div>
                 <div class="calcRow">
@@ -98,7 +107,7 @@
             </div>
         </div>
 
-        <div class="textBox">
+        <div class="textBox" id="guessTheNumber">
             <div class="guessTheNumber">
                 <p class="gtn">Guess the number!</p>
                 <p class="gtnRules">Select rules:
@@ -117,7 +126,7 @@
             </div>
         </div>
 
-        <div class="textBox">
+        <div class="textBox" id="YTM">
             <div class="Youtube Music">
                 <input type="text" id="musicSearch" placeholder="Search music...">
                 <button id="musicBtn">Search</button>
@@ -138,8 +147,75 @@
             </div>
         </div>
 
-        <div class="textBox typing">Game Project</div>
-        <div class="textBox typing">Wordle Project</div>
+        <div class="textBox" id="expenseTracker">
+            <div class="expenseTracker">
+                <p class="gtn">Expense Tracker</p><br>
+                <p class="ETinformation">Calculate income</p>
+                <p class="ETinformation">Calculate interests</p>
+                <p class="ETinformation">Calculate expenses</p>
+            </div>
+        </div>
+
+        <div class="textBox" id="weather">
+            <div class="weather">
+                <p class="gtn">Weather Today</p>
+                <p class="weatherInfo">null</p>
+            </div>
+        </div>
+
+        <div class="textBox">
+            <div class="Worlde">
+                <p class="gtn">Wordle</p>
+                <p class="wordleDisplay">start!</p>
+                <div class="wordleGrids">
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                    <div class="row">
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                        <div class="wordleLine"></div>
+                    </div>
+                </div>
+                <button class="startWordle">Start</button>
+                <input type="text" class="wordleGuessInput" placeholder="Enter guess here...">
+            </div>
+        </div>
+
         <div class="textBox typing">Clock Project</div>
     </div>
 

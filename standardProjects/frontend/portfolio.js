@@ -356,3 +356,184 @@ document.getElementById("musicBtn").addEventListener("click", async () => {
 function playVideo(videoId) {
   player.src = `https://www.youtube.com/embed/${videoId}?rel=0`;
 }
+
+
+// 
+// 
+// WEATHER NI YANNIX
+// 
+
+const weatherInput = document.querySelector('.weather')
+const weatherDisplay = document.querySelector('.weatherInfo')
+
+let weatherInfo = '';
+
+async function getWeather() {
+    const weatherURL = `https://api.open-meteo.com/v1/forecast?latitude=12.879721&longitude=121.774017&daily=sunrise,sunset,daylight_duration,sunshine_duration,rain_sum,showers_sum,precipitation_sum,precipitation_probability_max,weather_code,temperature_2m_max,apparent_temperature_max,temperature_2m_min,apparent_temperature_min,uv_index_max,uv_index_clear_sky_max&minutely_15=temperature_2m,relative_humidity_2m,dew_point_2m,precipitation,wind_gusts_10m,rain,sunshine_duration,wind_speed_80m,wind_direction_80m,is_day,visibility,weather_code&timezone=Asia/Manila&precipitation_unit=inch`
+    try {
+        const res = await fetch(weatherURL, {
+            headers: {
+                "Content-Type": "application/json"
+                }
+        });
+        const data = await res.json();
+        console.log(data);
+        convertWeatherData(data)
+    } catch (err) {
+        console.log('erorr detected:' + err)
+    }
+}
+
+getWeather()
+
+function convertWeatherData(data) {
+  // get first sunrise time
+  const sunriseISO = data.daily.sunrise[0];
+
+  const date = new Date(sunriseISO);
+
+  const readableTime = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  console.log(readableTime);
+  weatherInfo = `Time: ${readableTime}`
+
+  if (weatherInfo) {
+    let dateToday = data.daily.time[0]
+    dateToday = dateToday.replaceAll('-', '/').trim()
+    weatherInfo += `<br> Date: ${dateToday}`
+
+    let daylightDuration = data.daily.daylight_duration[0]
+    daylightDuration = Math.floor((daylightDuration / 60) / 60)
+    weatherInfo += `<br> Daylight Duration: ${daylightDuration} Hours`
+
+    const rain = data.daily.rain_sum
+    const maxRain = Math.max(...rain);
+    weatherInfo += `<br> Max rainfall: ${maxRain} inches`;
+
+    const rainShowers = data.daily.showers_sum
+    weatherInfo += `<br> Rain Showers: ${Math.max(...rainShowers)} inches`
+
+    const rainPropability = data.daily.precipitation_probability_max
+    weatherInfo += `<br> Rain Probability: ${Math.max(...rainPropability)}%`
+
+    const maxTemperature = data.daily.temperature_2m_max
+    const minTemperature = data.daily.temperature_2m_min
+    
+    console.log(minTemperature)
+
+    weatherInfo += `<br> Average Temperature: ${Math.max(...minTemperature)} ℃`
+    weatherInfo += `<br> Highest Temperature: ${Math.max(...maxTemperature)} ℃`
+
+    const generationtime = data.generationtime_ms.toFixed(5)
+
+    weatherInfo += `<br> `
+    weatherInfo += `<br> Fetched data in ${generationtime} milliseconds`
+    weatherInfo += `<br> Source: https://Open-Meteo.com`
+
+    updateWeatherDisplay()
+  }
+
+  
+  
+
+  return;
+}
+
+function updateWeatherDisplay() {
+    weatherDisplay.innerHTML = weatherInfo
+    return;
+}
+
+
+//
+// 
+// WORDLE
+// 
+// 
+
+const startWordle = document.querySelector('.startWordle')
+const wordLine = document.querySelectorAll('.wordleLine')
+const wordleGuess = document.querySelector('.wordleGuessInput')
+const wordleDisplay = document.querySelector('.wordleDisplay')
+
+let hasStartedWordle = false;
+let userGuess = ''
+let wordleUserGuess = ''
+
+startWordle.addEventListener('click', () => {
+    startWordle.style.opacity = 0
+    startWordle.style.display = 'none';
+    wordleGuess.style.display = 'flex';
+    hasStartedWordle = true;
+
+    setTimeout(() => {
+        wordleGuess.style.opacity = 1;
+        return;
+    })
+})
+
+document.addEventListener('keydown', (e) =>  {
+    userGuess = wordleGuess.value.toLowerCase().trim()
+    console.log(userGuess)
+    if (!hasStartedWordle) return;
+    if (e.key === 'Enter') {
+        if (userGuess > 5 || userGuess < 5 ||!userGuess || invalidSymbols.test(userGuess)) {
+            wordleDisplay.textContent = `Error input`
+            return;
+        }
+    }
+
+    wordleDisplayUpdate(userGuess);
+    return;
+})
+
+function wordleGuessHandler(letter) {
+
+}
+
+function wordleDisplayUpdate(letter) {
+    console.log(`in wordle display update`);
+    for (const line of wordLine) {
+        if (!line.textContent) {
+            line.textContent = letter;
+            console.log('updated line succesfully')
+            break;
+        } else {
+            console.log(`failed to add the letter`)
+            break;
+        }
+    }
+}
+
+
+
+// 
+// 
+// 
+// 
+
+const menuIcon = document.querySelector('.menuIcon')
+const menuOptions = document.querySelector('.menuOptions')
+
+let menuOpened = false
+
+menuIcon.addEventListener('click', () => {
+    if (menuOpened) {
+        menuIcon.classList.add('menuIconClose')
+        menuIcon.classList.remove('menuIconOpen')
+        menuOptions.classList.remove('showMenuOptions')
+        menuOptions.classList.add('hideMenuOptions')
+        menuOpened = false;
+        console.log('closing menu')
+    } else {
+        menuIcon.classList.remove('menuIconClose')
+        menuIcon.classList.add('menuIconOpen')
+        menuOptions.classList.remove('hideMenuOptions')
+        menuOptions.classList.add('showMenuOptions')
+        menuOpened = true
+        console.log('opening menu')
+    }
+})
