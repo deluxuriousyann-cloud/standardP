@@ -34,6 +34,21 @@ function typedHandler() {
 }
 
 function animationHandler() {
+    const storedUsername = localStorage.getItem("username")
+    
+    if (storedUsername !== usernameInput.value) {
+        localStorage.setItem("username", usernameInput.value)
+        console.log(`Username saved! ${localStorage.getItem("username")}`)
+    } else {
+        for (let i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key[i]
+            let value = localStorage.getItem(key)
+            console.log(key, value)
+        }
+        console.log(`username already exists, all values: ${localStorage.username}`)
+
+    }
+
     whiteLine.classList.add('moveLeftAnim');
     confirmButton.classList.remove('showButton');
     confirmButton.classList.add('moveLeftAnim');
@@ -138,8 +153,9 @@ typingClass.forEach(el => typeObserver.observe(el));
 
 //
 //
+// AI BAI
 //
-
+//
 
 const aiInterface = document.querySelector('.aiInterface')
 const botResponse = document.querySelector('.botResponse')
@@ -165,11 +181,11 @@ async function promptHandler(prompt) {
         )
         if (!res.ok) {
             reply = `i could not find what you're looking for: ${search}`
-             botResponse.textContent = `Error 404 / search without using 'what is' || 'what'. Instead, search 'JavaScript' || 'HTML' and so on.`;
+            searxng(search);
             return;
         }
         const data = await res.json();
-        reply = data.extract || `No summary available for ${[search]}`
+        reply = data.extract || searxng(search)
         
         let toType = reply;
         let typeIndex = 0;
@@ -186,14 +202,44 @@ async function promptHandler(prompt) {
 
         return;
     } catch {
-        botResponse.textContent = `Error 404 / search without using 'what is' || 'what'. Instead, search 'JavaScript' || 'HTML' and so on.`;
+        searxng(search);
     }
 
 }
 
+async function searxng(query) {
+
+    try {
+        const res = await fetch(
+            `https://searx.be/search?q=${encodeURIComponent(query)}&format=json`
+        )
+
+
+        if (!res.ok) {
+            botResponse.textContent = `I couldn't find what you're looking for: ${query}`
+            return
+        }
+
+        const data = await res.json()
+        console.log(data)
+
+        // Example: show first result
+        if (data.results && data.results.length > 0) {
+            botResponse.textContent = data.results[0].content || 'No summary available.'
+        } else {
+            botResponse.textContent = `No results found for: ${query}`
+        }
+
+    } catch (err) {
+        console.error(err)
+        botResponse.textContent = `Search failed.`
+    }
+}
+
+
 //
 // 
-// 
+// CALCULATOR
 // 
 // 
 
@@ -314,7 +360,7 @@ function guessHandler(guess) {
 
 // 
 // 
-// 
+// YOUTUBE MUSIC
 // 
 // 
 
@@ -458,16 +504,23 @@ const startWordle = document.querySelector('.startWordle')
 const wordLine = document.querySelectorAll('.wordleLine')
 const wordleGuess = document.querySelector('.wordleGuessInput')
 const wordleDisplay = document.querySelector('.wordleDisplay')
+const wordleRow = document.querySelectorAll('.wordleRow')
 
+let wordleColumn = 1;
 let hasStartedWordle = false;
+let isWrong = false
 let userGuess = ''
 let wordleUserGuess = ''
+let wordToGuess = ''
+let allowedWordleGuess = /[a-z\s]+/i
+let maxLetters = 0;
 
 startWordle.addEventListener('click', () => {
     startWordle.style.opacity = 0
     startWordle.style.display = 'none';
     wordleGuess.style.display = 'flex';
     hasStartedWordle = true;
+    wordleToGuessHandler()
 
     setTimeout(() => {
         wordleGuess.style.opacity = 1;
@@ -475,43 +528,86 @@ startWordle.addEventListener('click', () => {
     })
 })
 
-document.addEventListener('keydown', (e) =>  {
-    userGuess = wordleGuess.value.toLowerCase().trim()
-    console.log(userGuess)
+wordleGuess.addEventListener('input', () =>  {
+    userGuess = wordleGuess.value.slice((wordleGuess.value.length - 1), wordleGuess.value.length)
+    
     if (!hasStartedWordle) return;
-    if (e.key === 'Enter') {
-        if (userGuess > 5 || userGuess < 5 ||!userGuess || invalidSymbols.test(userGuess)) {
-            wordleDisplay.textContent = `Error input`
-            return;
-        }
+    maxLetters++
+
+    if (maxLetters > 5) {
+        deletedGuessLetter = wordleGuess.value.slice((wordleGuess.value.length - 1), wordleGuess.value.length)
+        wordleGuess.value = wordleGuess.value.replace(deletedGuessLetter, '')
+        console.log(`deleting ${deletedGuessLetter}, new value: ${wordleGuess.value}`)
     }
 
-    wordleDisplayUpdate(userGuess);
+    for (const line of wordLine) {
+        if (!line.textContent && maxLetters < 6) {
+            line.textContent = userGuess.toUpperCase();
+            console.log('updated line succesfully')
+            console.log(`Max letters count: ${maxLetters}`)
+            break;
+        } else {
+            console.log('failed to add text')
+        }
+    }
+    
     return;
 })
 
-function wordleGuessHandler(letter) {
+document.addEventListener('keydown', (e) => {
+    let i = 0;
+    if (!hasStartedWordle) return;
+    if (e.key !== 'Enter') return;
+    if (wordleGuess.value < 5) return;
+    wordleRow.forEach((row) => {
+        row.querySelectorAll('.wordleLine')
+        
+    })
 
-}
-
-function wordleDisplayUpdate(letter) {
-    console.log(`in wordle display update`);
-    for (const line of wordLine) {
-        if (!line.textContent) {
-            line.textContent = letter;
-            console.log('updated line succesfully')
-            break;
-        } else {
-            console.log(`failed to add the letter`)
-            break;
+    for (const line of wordLine) {  
+        if (line.textContent) {
+        if (line.textContent == wordToGuess[i]) {
+            console.log(i)
+            line.classList.add('correct');
+        } else if (wordToGuess.includes(line.textContent)) {
+            line.classList.add('close');
+        }
+        console.log(i)
+        i++
+        line.classList.add('filled');
+        isWrong = true
         }
     }
+
+    
+    if (isWrong) maxLetters = 0;
+    wordleGuess.value = ''
+    isWrong = false
+    const filledLines = document.querySelectorAll('.wordleLine.filled')
+    filledLines.forEach((line) => {
+        console.log(line)
+    })
+
+})
+
+function wordleToGuessHandler() {
+    const arrayOfWords = [
+        'HELLO',
+        'WORLD',
+        'GREEN'
+    ]
+
+    wordToGuess = arrayOfWords[Math.floor(Math.random() * arrayOfWords.length)]
+    console.log('Your word to guess is ' + wordToGuess)
 }
 
 
 
+
+
+
 // 
-// 
+// MENU ANIMATION
 // 
 // 
 
@@ -521,6 +617,7 @@ const menuOptions = document.querySelector('.menuOptions')
 let menuOpened = false
 
 menuIcon.addEventListener('click', () => {
+    const mainContent = document.querySelector('.mainContent')
     if (menuOpened) {
         menuIcon.classList.add('menuIconClose')
         menuIcon.classList.remove('menuIconOpen')
@@ -537,3 +634,117 @@ menuIcon.addEventListener('click', () => {
         console.log('opening menu')
     }
 })
+
+// 
+// 
+// RANDOM PASS GENERATOR
+// 
+// 
+const passwordOption = document.querySelectorAll('.passwordOption');
+const passwordDisplay = document.querySelector('.randomPassDisplay');
+const generateButton = document.querySelector('.generatePass');
+
+// Just use strings, not arrays
+const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const numbers = '0123456789';
+const symbols = '!@#$%^&*()_-+=|/?><.,;:';
+
+function randomPassGenerator(allowedChars) {
+    let result = '';
+    for (let i = 0; i < 30; i++) {
+        result += allowedChars[Math.floor(Math.random() * allowedChars.length)];
+    }
+    console.log('Generated password:', result);
+    passwordDisplay.textContent = result;
+    navigator.clipboard.writeText(result)
+        .then(() => {
+            console.log(`copied text`)
+        })
+        .catch((err) => {
+            console.error('failed to copy: ', err)
+        })
+    
+}
+
+// Toggle class when clicked
+passwordOption.forEach(option => {
+    option.addEventListener('click', () => {
+        option.classList.toggle('toggledPasswordOption');
+    });
+});
+
+generateButton.addEventListener('click', () => {
+    // Build one big string of allowed characters
+    let allowed = '';
+
+    passwordOption.forEach(option => {
+        if (option.classList.contains('toggledPasswordOption')) {
+            switch (option.dataset.value) {
+                case 'allowLow':
+                    allowed += lowercase;
+                    break;
+                case 'allowUp':
+                    allowed += uppercase;
+                    break;
+                case 'allowNum':
+                    allowed += numbers;
+                    break;
+                case 'allowSym':
+                    allowed += symbols;
+                    break;
+            }
+        }
+    });
+
+    if (!allowed) {
+        passwordDisplay.textContent = 'Please select at least one option!';
+        return;
+    }
+
+    randomPassGenerator(allowed);
+});
+
+
+// 
+// 
+// RANDOM FACTS
+// 
+// 
+
+const randomFactsDisplay = document.querySelector('.randomFactsDisplay')
+
+setInterval(() => {
+    getRandomFact()
+    getJokes()
+}, 5000)
+
+async function getRandomFact() {
+    const res = await fetch('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en')
+    const data = await res.json()
+    updateRandomFactsDisplay(data.text)
+    return;
+}
+
+function updateRandomFactsDisplay(data) {
+    randomFactsDisplay.textContent = data;
+}
+
+// 
+// 
+// RANDOM JOKES
+// 
+// 
+
+const randomJokesDisplay = document.querySelector('.randomJokesDisplay')
+
+async function getJokes() {
+    const res = await fetch('https://official-joke-api.appspot.com/random_joke')
+    const data = await res.json()
+    updateJokesDisplay(data.setup, data.punchline)
+    console.log(data.setup)
+}
+
+function updateJokesDisplay(data, punchline) {
+    randomJokesDisplay.textContent = data + '... ' + punchline
+}
